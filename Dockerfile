@@ -42,7 +42,8 @@ RUN INSTALL_PKGS="policycoreutils rsync wget tar gettext hostname bind9.18-utils
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*' && \
-    mkdir -p /var/lib/mysql/data && chown -R mysql.0 /var/lib/mysql
+    mkdir -p /var/lib/mysql/data && chown -R mysql.0 /var/lib/mysql && \
+    test "$(id mysql)" = "uid=27(mysql) gid=27(mysql) groups=27(mysql)"
 
 # Get prefix path and path to scripts rather than hard-code them in scripts
 ENV CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/mysql \
@@ -65,6 +66,8 @@ RUN rm -rf /etc/my.cnf.d/* && \
     /usr/libexec/container-setup && \
     rpm-file-permissions && \
     /usr/libexec/mysqld -V | grep -qe "$MYSQL_VERSION\." && echo "Found VERSION $MYSQL_VERSION"
+
+USER 27
 
 ENTRYPOINT ["container-entrypoint"]
 CMD ["run-mysqld"]
