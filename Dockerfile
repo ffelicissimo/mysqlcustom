@@ -66,6 +66,7 @@ RUN rm -rf /etc/my.cnf.d/* && \
     rpm-file-permissions && \
     /usr/libexec/mysqld -V | grep -qe "$MYSQL_VERSION\." && echo "Found VERSION $MYSQL_VERSION"
 
+USER 0
 
 ENTRYPOINT ["container-entrypoint"]
 CMD ["run-mysqld"]
