@@ -38,7 +38,7 @@ EXPOSE 3306
 # This image must forever use UID 27 for mysql user so our volumes are
 # safe in the future. This should *never* change, the last test is there
 # to make sure of that.
-RUN INSTALL_PKGS="policycoreutils rsync tar gettext hostname bind9.18-utils groff-base mysql-server" && \
+RUN INSTALL_PKGS="policycoreutils rsync wget tar gettext hostname bind9.18-utils groff-base mysql-server" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*' && \
@@ -65,8 +65,6 @@ RUN rm -rf /etc/my.cnf.d/* && \
     /usr/libexec/container-setup && \
     rpm-file-permissions && \
     /usr/libexec/mysqld -V | grep -qe "$MYSQL_VERSION\." && echo "Found VERSION $MYSQL_VERSION"
-
-USER 0
 
 ENTRYPOINT ["container-entrypoint"]
 CMD ["run-mysqld"]
